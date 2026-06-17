@@ -36,6 +36,8 @@ user prompt  │                                 │
                     (verdict + response)
 ```
 
+Note: `route` is a LangGraph conditional edge — the branching logic between `classify` and the two terminal nodes — not a separate node, so it isn't drawn as a box above.
+
 **Why each node exists:**
 
 - **classify** — Runs the ML classifier and writes a `score` (injection probability in [0, 1]) into the shared `GuardState`. Separating scoring from routing means the threshold is a single configurable parameter, not buried in conditional logic.
@@ -65,7 +67,7 @@ obfuscated    5/6               0/6
 benign false-positive rate  ML=0.00  keyword=0.00
 ```
 
-The `obfuscated` column is the decisive one. The keyword filter catches zero of six obfuscated injections; the ML classifier (`protectai/deberta-v3-base-prompt-injection-v2`) catches five of six, with zero false positives on benign prompts. This is the defensive corollary of the dissertation result: obfuscation is not just an academic edge case, it is the normal attack surface that simple pattern-matching ignores.
+The `obfuscated` column is the decisive one. The keyword filter catches zero of six obfuscated injections; the ML classifier (`protectai/deberta-v3-base-prompt-injection-v2`) catches five of six, with zero false positives on benign prompts. This is the defensive corollary of the dissertation result: obfuscation is not a contrived edge case; it is the easiest evasion available to an attacker.
 
 ---
 
@@ -85,7 +87,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 The CLI exits with code `0` (allowed) or `1` (blocked) and prints the verdict and injection score:
 
 ```
-verdict: blocked  (injection score: 0.999)
+verdict: blocked  (injection score: 1.000)
 response: Request blocked: prompt flagged as a possible injection attempt.
 ```
 
