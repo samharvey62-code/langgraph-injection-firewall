@@ -52,7 +52,9 @@ def evaluate(rows: List[dict], score_fn: Callable[[str], float], threshold: floa
 
 def format_table(summary: Dict) -> str:
     """Render a captioned detection-rate table comparing the two detectors."""
-    families = [f for f in summary["ml"] if f != "false_positive_rate"]
+    # Exclude "false_positive_rate" (not a family) and "benign" (no injections to detect;
+    # benign is already reported on the false-positive-rate line below).
+    families = [f for f in summary["ml"] if f not in ("false_positive_rate", "benign")]
     lines = [
         "Detection rate by family (higher = better; obfuscated is the telling column)",
         "-" * 64,

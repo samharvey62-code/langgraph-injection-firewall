@@ -22,6 +22,9 @@ def test_keyword_misses_obfuscated():
     assert summary["keyword"]["direct"]["detected"] == 1
     # ...but misses leetspeak obfuscation
     assert summary["keyword"]["obfuscated"]["detected"] == 0
+    # ML detector (score=0.0, always below threshold) also reports zero detections
+    assert summary["ml"]["direct"]["detected"] == 0
+    assert summary["ml"]["obfuscated"]["detected"] == 0
 
 
 def test_format_table_returns_caption_and_rows():
